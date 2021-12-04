@@ -134,14 +134,21 @@ namespace WindowsFormsApp1
                 ans[1] = "E3";
                 return ans;
             }
-
-            // write code here to return the channel number
-            string channelActual = "1";
             // find first space in line string
             int firstSpace = lineString.IndexOf(" ");
-            
 
-            // error here FormatException
+            // return the channel number
+            string channelActual = lineString.Remove(firstSpace);   // first remove everything after the space
+            channelActual = channelActual.Remove(0, 1);
+            int chanActual = Convert.ToInt32(channelActual);
+
+            // now check that the channel number match
+            if (!(chanActual == channel))
+            {
+                Console.WriteLine("Line numbers don't match:", chanActual, " ", channel);
+            }
+
+            // now get the line number
             int intLine;
             try
             {
@@ -158,10 +165,10 @@ namespace WindowsFormsApp1
 
             /*
             Console.WriteLine("Line String: " + lineString);
+            Console.WriteLine("Actual Channel: " + channelActual);
             Console.WriteLine("Line String space: " + firstSpace);
-            Console.WriteLine("Line String val: " + ans[0]);
+            Console.WriteLine("Line Number: " + ans[1].ToString());
             */
-
             return ans;
         }
 
@@ -192,23 +199,32 @@ namespace WindowsFormsApp1
                 ans[1] = "E3";
                 return ans;
             }
+            // find first space in line string
+            int firstSpace = loopString.IndexOf(" ");
 
-            // write code here to return the channel number
-            string channelActual = "1";
+            // return the channel number
+            string channelActual = loopString.Remove(firstSpace);   // first remove everything after the space
+            channelActual = channelActual.Remove(0, 1);
+            int chanActual = Convert.ToInt32(channelActual);
 
             // find second space in loop string
             int secSpace = loopString.IndexOf(" ", loopString.IndexOf(" ") + 1);
 
-
             ans[0] = channelActual;
             ans[1] = loopString.Remove(0, secSpace + 1);
 
+            // now check that the channel numbers match
+            if (!(chanActual == channel))
+            {
+                Console.WriteLine("Line numbers don't match:", chanActual, " ", channel);
+            }
+
             /*
             Console.WriteLine("Loop String: " + loopString);
+            Console.WriteLine("Actual Channel: " + channelActual);
             Console.WriteLine("Loop String space: " + secSpace);
             Console.WriteLine("Loop String val: " + ans[1]);
             */
-
             return ans;
         }
 

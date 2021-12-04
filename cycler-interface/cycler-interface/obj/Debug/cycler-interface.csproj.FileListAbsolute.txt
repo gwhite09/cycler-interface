@@ -8,3 +8,13 @@ C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\o
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.csproj.CoreCompileInputs.cache
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.exe
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.pdb
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\cycler-interface.exe.config
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\cycler-interface.exe
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\cycler-interface.pdb
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.csprojAssemblyReference.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler_interface.Form1.resources
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler_interface.Properties.Resources.resources
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.csproj.GenerateResource.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.csproj.CoreCompileInputs.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.exe
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler-interface.pdb

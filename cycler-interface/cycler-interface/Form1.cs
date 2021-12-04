@@ -29,7 +29,7 @@ namespace cycler_interface
         System.Timers.Timer basyConnectionTimer;
 
         // variables
-        int basyRequestInterval = 1000;
+        int basyRequestInterval =5000;
         int screenRefereshTime = 1000;            // sets the screen refresh time in ms
         int portInput;
         string serverIpAd;
@@ -48,9 +48,6 @@ namespace cycler_interface
             screenUpdateThread = new Thread(new ThreadStart(UpdateScreen));
             screenUpdateThread.IsBackground = true;
             screenUpdateThread.Start();
-
-            
-            
 
             //instance of timers
             requestFromBasyTimer = new System.Timers.Timer();
@@ -80,6 +77,7 @@ namespace cycler_interface
         {
             var basyLine = new[]
 {
+                basyLine0,
                 basyLine1,
                 basyLine2,
                 basyLine3,
@@ -119,10 +117,10 @@ namespace cycler_interface
                 basyLine37,
                 basyLine38,
                 basyLine39,
-                basyLine40,
             };
             var basyCycle = new[]
 {
+                basyCycle0,
                 basyCycle1,
                 basyCycle2,
                 basyCycle3,
@@ -161,8 +159,7 @@ namespace cycler_interface
                 basyCycle36,
                 basyCycle37,
                 basyCycle38,
-                basyCycle39,
-                basyCycle40
+                basyCycle39
             };
 
             while (true)
@@ -198,6 +195,12 @@ namespace cycler_interface
         }
         public void requestFromBasy(object source, ElapsedEventArgs e)
         {
+            /*
+            // TEST CODE
+            Console.WriteLine("Starting basy connection");
+            string[] lineNum = basy.getLoop(22);
+            */
+
             // cycle through each channel and request the info
             for (int i = 0; i < 40; i++)
             {
@@ -229,6 +232,7 @@ namespace cycler_interface
                 }
                 basyCurrentStats[actualChannel, 1] = loopNum[1];
             }
+
         }
         private void ConnectToBasy()
         {
@@ -436,14 +440,7 @@ namespace cycler_interface
         */
         private void ConnectBasy_Click(object sender, EventArgs e)
         {
-            if (basyConnected)
-            {
-                DisconnectBasy();
-            }
-            else
-            {
-                ConnectToBasy();
-            }
+            
         }
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -462,6 +459,18 @@ namespace cycler_interface
         private void Label43_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void connectBasy_Click_1(object sender, EventArgs e)
+        {
+            if (basyConnected)
+            {
+                DisconnectBasy();
+            }
+            else
+            {
+                ConnectToBasy();
+            }
         }
     }
 }
