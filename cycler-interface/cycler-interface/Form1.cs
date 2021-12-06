@@ -19,6 +19,7 @@ namespace cycler_interface
     {
         // initialise objects
         basytecAPI basy;
+        peltierTCP peltierTCP_1;
 
         // threads
         Thread screenUpdateThread;  // creates a new thread for updating the screen
@@ -29,7 +30,7 @@ namespace cycler_interface
         System.Timers.Timer basyConnectionTimer;
 
         // variables
-        int basyRequestInterval =5000;
+        int basyRequestInterval =1000;
         int screenRefereshTime = 1000;            // sets the screen refresh time in ms
         int portInput;
         string serverIpAd;
@@ -65,6 +66,7 @@ namespace cycler_interface
 
             // create instance
             basy = new basytecAPI();
+            peltierTCP_1 = new peltierTCP(serverLog, serverConnect1);
 
         }
         public void UpdateScreen()
@@ -170,23 +172,66 @@ namespace cycler_interface
 
                 if (serverOpen)
                 {
-                    portStatus.Invoke((MethodInvoker)delegate
+                    portStatus1.Invoke((MethodInvoker)delegate
                     {
-                        portStatus.BackColor = Color.FromArgb(255, 0, 210, 100);
-                        portStatus.Text = "Server Port Open";
+                        portStatus1.BackColor = Color.FromArgb(255, 0, 210, 100);
+                        portStatus1.Text = "Server Port Open";
                     });
 
                 }
                 else
                 {
-                    portStatus.Invoke((MethodInvoker)delegate
+                    portStatus1.Invoke((MethodInvoker)delegate
                     {
-                        portStatus.BackColor = Color.FromName("Coral");
-                        portStatus.Text = "Server Port Closed";
+                        portStatus1.BackColor = Color.FromName("Coral");
+                        portStatus1.Text = "Server Port Closed";
                     });
                 }
             }
         }
+        private void appendToMessageLog(string message)
+        {
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");     // creates a timestamp for when the message was printed to the messagelog
+
+            // checks to see if the graph is on a seperate thread 
+
+
+            if (messageLog.InvokeRequired)
+            {
+                messageLog.Invoke((MethodInvoker)delegate
+                {
+                    // Running on the UI thread
+                    messageLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
+                });
+            }
+            else
+            {
+                messageLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
+            }
+        }
+        private void appendToServerLog(string message)
+        {
+            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");     // creates a timestamp for when the message was printed to the messagelog
+
+            // checks to see if the graph is on a seperate thread 
+
+
+            if (serverLog.InvokeRequired)
+            {
+                serverLog.Invoke((MethodInvoker)delegate
+                {
+                    // Running on the UI thread
+                    serverLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
+                });
+            }
+            else
+            {
+                serverLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
+            }
+        }
+        /*
+         *      BASYTEC CONNECTION
+         */
         public void requestFromBasy(object source, ElapsedEventArgs e)
         {
             /*
@@ -226,6 +271,9 @@ namespace cycler_interface
                 }
                 basyCurrentStats[actualChannel, 1] = loopNum[1];
             }
+
+            // finally update the values in each PeltierTCP instance
+            updateServerVariables();
 
         }
         private void ConnectToBasy()
@@ -276,52 +324,28 @@ namespace cycler_interface
                 requestFromBasyTimer.Start();
             }
         }
-        private void appendToMessageLog(string message)
+        /*
+         *      PELTIER SERVER CONNECTIONS
+         */
+        private void updateServerVariables()
         {
-            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");     // creates a timestamp for when the message was printed to the messagelog
-
-            // checks to see if the graph is on a seperate thread 
-
-
-            if (messageLog.InvokeRequired)
+            var peltierInstances = new[]
             {
-                messageLog.Invoke((MethodInvoker)delegate
-                {
-                    // Running on the UI thread
-                    messageLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
-                });
-            }
-            else
-            {
-                messageLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
-            }
-        }
-        private void appendToServerLog(string message)
-        {
-            string timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff");     // creates a timestamp for when the message was printed to the messagelog
+                peltierTCP_1
+            };
 
-            // checks to see if the graph is on a seperate thread 
-
-
-            if (serverLog.InvokeRequired)
+            // now cycle through each instance and update them one by one
+            foreach (peltierTCP instance in peltierInstances)
             {
-                serverLog.Invoke((MethodInvoker)delegate
-                {
-                    // Running on the UI thread
-                    serverLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
-                });
-            }
-            else
-            {
-                serverLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
+                instance.updateBasyStats(basyCurrentStats);
             }
         }
         private void InitialiseServer()
         {
             try
             {
-                portInput = Convert.ToInt32(serverPortInput.Text);
-                serverIpAd = serverIPInput.Text;
+                portInput = Convert.ToInt32(serverPortInput1.Text);
+                serverIpAd = serverIPInput1.Text;
             }
             catch
             {
@@ -365,10 +389,10 @@ namespace cycler_interface
 
                 // connection established
                 appendToServerLog("Connection Established");
-                serverConnect.Invoke((MethodInvoker)delegate
+                serverConnect1.Invoke((MethodInvoker)delegate
                 {
-                    serverConnect.Enabled = true;
-                    serverConnect.Text = "Close";
+                    serverConnect1.Enabled = true;
+                    serverConnect1.Text = "Close";
                 });
                 
 
@@ -421,10 +445,10 @@ namespace cycler_interface
                 Console.WriteLine("Error..... " + e.StackTrace);
                 appendToServerLog("Disconnected");
 
-                serverConnect.Invoke((MethodInvoker)delegate
+                serverConnect1.Invoke((MethodInvoker)delegate
                 {
-                    serverConnect.Text = "Open";
-                    serverConnect.Enabled = true;
+                    serverConnect1.Text = "Open";
+                    serverConnect1.Enabled = true;
                 });
                 serverOpen = false;
             }
@@ -432,29 +456,6 @@ namespace cycler_interface
         /*
         *  BUTTONS
         */
-        private void ConnectBasy_Click(object sender, EventArgs e)
-        {
-            
-        }
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            if (serverConnect.Text == "Open")
-            {
-                InitialiseServer();
-                serverConnect.Text = "Awaiting Connection";
-                serverConnect.Enabled = false;
-            }
-            else
-            {
-                CloseServer();
-                serverConnect.Text = "Open";
-            }
-        }
-        private void Label43_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void connectBasy_Click_1(object sender, EventArgs e)
         {
             if (basyConnected)
@@ -466,5 +467,31 @@ namespace cycler_interface
                 ConnectToBasy();
             }
         }
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            if (serverConnect1.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_1.InitialiseServer(serverPortInput1.Text, serverIPInput1.Text);
+                serverConnect1.Text = "Awaiting Connection";
+                serverConnect1.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_1.CloseServer();
+                serverConnect1.Text = "Open";
+            }
+        }
+        private void Label43_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void ConnectBasy_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }
