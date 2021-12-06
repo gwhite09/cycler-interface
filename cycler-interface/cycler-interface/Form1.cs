@@ -19,7 +19,13 @@ namespace cycler_interface
     {
         // initialise objects
         basytecAPI basy;
-        peltierTCP peltierTCP_1;
+        peltierTCP 
+            peltierTCP_1,
+            peltierTCP_2,
+            peltierTCP_3,
+            peltierTCP_4,
+            peltierTCP_5,
+            peltierTCP_6;
 
         // threads
         Thread screenUpdateThread;  // creates a new thread for updating the screen
@@ -31,19 +37,16 @@ namespace cycler_interface
 
         // variables
         int basyRequestInterval =10000;
-        int screenRefereshTime = 1000;            // sets the screen refresh time in ms
-        int portInput;
-        string serverIpAd;
+        int screenRefereshTime = 500;            // sets the screen refresh time in ms
 
         String[,] basyCurrentStats = new String[41, 2]; // spare row to store bad data
 
         private bool basyConnected = false;
-        private bool serverOpen = false;
-        bool serverInitFlag = true;
 
         public Form1()
         {
             InitializeComponent();
+            loadDefaultSettings();
 
             // start a thread for updating the windows form screen every second. Used for logging data too
             screenUpdateThread = new Thread(new ThreadStart(UpdateScreen));
@@ -67,6 +70,11 @@ namespace cycler_interface
             // create instance
             basy = new basytecAPI();
             peltierTCP_1 = new peltierTCP(serverLog, serverConnect1);
+            peltierTCP_2 = new peltierTCP(serverLog, serverConnect2);
+            peltierTCP_3 = new peltierTCP(serverLog, serverConnect3);
+            peltierTCP_4 = new peltierTCP(serverLog, serverConnect4);
+            peltierTCP_5 = new peltierTCP(serverLog, serverConnect5);
+            peltierTCP_6 = new peltierTCP(serverLog, serverConnect6);
 
         }
         public void UpdateScreen()
@@ -170,23 +178,47 @@ namespace cycler_interface
                     });
                 }
 
-                if (serverOpen)
+                if (basyConnected)
                 {
-                    portStatus1.Invoke((MethodInvoker)delegate
+                    basyConnectedLabel.Invoke((MethodInvoker)delegate
                     {
-                        portStatus1.BackColor = Color.FromArgb(255, 0, 210, 100);
-                        portStatus1.Text = "Server Port Open";
+                        basyConnectedLabel.BackColor = Color.FromArgb(255, 0, 210, 100);
+                        basyConnectedLabel.Text = "Connected";
+                        basyConnectLabel2.BackColor = Color.FromArgb(255, 0, 210, 100);
+                        basyConnectLabel2.Text = "BaSyTec Connected";
+                        connectBasy.Text = "Disconnect";
                     });
-
                 }
                 else
                 {
-                    portStatus1.Invoke((MethodInvoker)delegate
+                    basyConnectedLabel.Invoke((MethodInvoker)delegate
                     {
-                        portStatus1.BackColor = Color.FromName("Coral");
-                        portStatus1.Text = "Server Port Closed";
+                        basyConnectedLabel.BackColor = Color.FromName("Coral");
+                        basyConnectedLabel.Text = "Not connected";
+                        basyConnectLabel2.BackColor = Color.FromName("Coral");
+                        basyConnectLabel2.Text = "BaSyTec";
+                        connectBasy.Text = "Connect";
                     });
                 }
+
+                updateServerIndicators();
+            }
+        }
+        private void updateIPs(object sender, EventArgs e)
+        {
+            var IPInputs = new[]
+            {
+                IPInput2,
+                IPInput3,
+                IPInput4,
+                IPInput5,
+                IPInput6
+            };
+
+            // now cycle through each instance and update them one by one
+            foreach (TextBox IP in IPInputs)
+            {
+                IP.Text = serverIPInput1.Text;
             }
         }
         private void appendToMessageLog(string message)
@@ -229,10 +261,55 @@ namespace cycler_interface
                 serverLog.AppendText(timestamp + " => " + message + System.Environment.NewLine);
             }
         }
+        private void closeForm()
+        {
+            saveDefaultSettings();
+        }
+        private void loadForm()
+        {
+            loadDefaultSettings();
+        }
         /*
-         *      BASYTEC CONNECTION
+         *      SAVE AND LOAD DATA
          */
-        public void requestFromBasy(object source, ElapsedEventArgs e)
+        private void loadDefaultSettings()
+        {
+            Console.WriteLine("Settings loaded");
+
+            // load all the default settings from the config file or the temp file on the user PC
+            basyIP.Text = Properties.Settings.Default.basyIP;
+            basyPort.Text = Properties.Settings.Default.basyPort;
+            serverIPInput1.Text = Properties.Settings.Default.localIP;
+            serverPortInput1.Text = Properties.Settings.Default.port1;
+            serverPortInput2.Text = Properties.Settings.Default.port2;
+            serverPortInput3.Text = Properties.Settings.Default.port3;
+            serverPortInput4.Text = Properties.Settings.Default.port4;
+            serverPortInput5.Text = Properties.Settings.Default.port5;
+            serverPortInput6.Text = Properties.Settings.Default.port6;
+
+        }
+        private void saveDefaultSettings()
+        {
+            Console.WriteLine("Settings saved");
+
+            // save all the default settings from the config file or the temp file on the user PC
+            Properties.Settings.Default.basyIP = basyIP.Text;
+            Properties.Settings.Default.basyPort = basyPort.Text;
+            Properties.Settings.Default.localIP = serverIPInput1.Text;
+            Properties.Settings.Default.port1 = serverPortInput1.Text;
+            Properties.Settings.Default.port2 = serverPortInput2.Text;
+            Properties.Settings.Default.port3 = serverPortInput3.Text;
+            Properties.Settings.Default.port4 = serverPortInput4.Text;
+            Properties.Settings.Default.port5 = serverPortInput5.Text;
+            Properties.Settings.Default.port6 = serverPortInput6.Text;
+
+            // now save all the properties
+            Properties.Settings.Default.Save();
+        }
+            /*
+             *      BASYTEC CONNECTION
+             */
+            public void requestFromBasy(object source, ElapsedEventArgs e)
         {
             /*
             // TEST CODE
@@ -351,119 +428,52 @@ namespace cycler_interface
                 instance.updateBasyStats(basyCurrentStats);
             }
         }
-        private void InitialiseServer()
+        private void updateServerIndicators()
         {
-            try
+            var peltierInstances = new[]
             {
-                portInput = Convert.ToInt32(serverPortInput1.Text);
-                serverIpAd = serverIPInput1.Text;
-            }
-            catch
+                serverConnect1,
+                serverConnect2,
+                serverConnect3,
+                serverConnect4,
+                serverConnect5,
+                serverConnect6
+            };
+
+            var indicators = new[]
             {
-                appendToServerLog("Are port and IP in the right format");
-                return;
-            }
-            Console.WriteLine("Creating a thread");
-            // start a thread for updating the windows form screen every second. Used for logging data too
-            Thread serverThread = new Thread(new ThreadStart(openServer));
-            serverThread.IsBackground = true;
-            serverThread.Start();
-        }
-        private void CloseServer()
-        {
-            serverOpen = false;
-            Thread.Sleep(500);
-        }
-        private void openServer()
-        {
-            // create connection
-            IPAddress ipAddress = System.Net.IPAddress.Parse(serverIpAd);
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, portInput);
+                portStatus1,
+                portStatus2,
+                portStatus3,
+                portStatus4,
+                portStatus5,
+                portStatus6
+            };
 
-            // Create a Socket that will use Tcp protocol
-
-            Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            try
+            int i = 0;
+            foreach (Label indicator in indicators)
             {
-                // A Socket must be associated with an endpoint using the Bind method
-                listener.Bind(localEndPoint);
-
-                // Specify how many requests a Socket can listen before it gives Server busy response.
-                // We will listen 10 requests at a time
-                listener.Listen(10);
-
-                appendToServerLog("Waiting for a connection...");
-                serverOpen = true;
-
-                // awaiting connection
-                Socket handler = listener.Accept();
-
-                // connection established
-                appendToServerLog("Connection Established");
-                serverConnect1.Invoke((MethodInvoker)delegate
+                if (peltierInstances[i].Text == "Open")
                 {
-                    serverConnect1.Enabled = true;
-                    serverConnect1.Text = "Close";
-                });
-                
-
-                // now infinite loop to listen for requests
-                while (serverOpen)
-                {
-                    // Incoming data from the client.
-                    string data = null;
-                    byte[] bytes = null;
-
-                    while (serverOpen)
+                    indicator.Invoke((MethodInvoker)delegate
                     {
-                        bytes = new byte[1024];
-                        int bytesRec = handler.Receive(bytes);
-                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            break;
-                        }
-                    }
-                    string chanNum = data.Split('<')[0];
-                    //appendToServerLog("Text received:" + data);
-                    //appendToServerLog("Channel #:" + chanNum);
-
-                    string line = "0";
-                    string loop = "0";
-                    try
-                    {
-                        line = basyCurrentStats[Convert.ToInt32(chanNum) - 1, 0];
-                        loop = basyCurrentStats[Convert.ToInt32(chanNum) - 1, 1];
-                    }
-                    catch (NullReferenceException)
-                    {
-                        Console.WriteLine("Info requested from blank line");
-                    }
-
-                    string dataSend = chanNum + ":" + line + ":" + loop;
-                    byte[] msg = Encoding.ASCII.GetBytes(dataSend);
-                    handler.Send(msg);
+                        indicator.BackColor = Color.FromName("Coral");
+                        indicator.Text = "Server Port Closed";
+                    });
                 }
-                handler.Close();
-                listener.Close();
-                Console.WriteLine("Exited loop");
-                
-
-            }
-            catch (Exception e)
-            {
-                listener.Close();
-                Console.WriteLine("Error..... " + e.StackTrace);
-                appendToServerLog("Disconnected");
-
-                serverConnect1.Invoke((MethodInvoker)delegate
+                else
                 {
-                    serverConnect1.Text = "Open";
-                    serverConnect1.Enabled = true;
-                });
-                serverOpen = false;
+                    indicator.Invoke((MethodInvoker)delegate
+                    {
+                        indicator.BackColor = Color.FromArgb(255, 0, 210, 100);
+                        indicator.Text = "Server Port Open";
+                        
+                    });
+                }
+                i++;
             }
         }
+
         /*
         *  BUTTONS
         */
@@ -493,6 +503,94 @@ namespace cycler_interface
                 peltierTCP_1.CloseServer();
                 serverConnect1.Text = "Open";
             }
+        }
+        private void ServerConnect2_Click(object sender, EventArgs e)
+        {
+            if (serverConnect2.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_2.InitialiseServer(serverPortInput2.Text, IPInput2.Text);
+                serverConnect2.Text = "Awaiting Connection";
+                serverConnect2.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_2.CloseServer();
+                serverConnect2.Text = "Open";
+            }
+        }
+        private void ServerConnect3_Click(object sender, EventArgs e)
+        {
+            if (serverConnect3.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_3.InitialiseServer(serverPortInput3.Text, IPInput3.Text);
+                serverConnect3.Text = "Awaiting Connection";
+                serverConnect3.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_3.CloseServer();
+                serverConnect3.Text = "Open";
+            }
+        }
+        private void ServerConnect4_Click(object sender, EventArgs e)
+        {
+            if (serverConnect4.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_4.InitialiseServer(serverPortInput4.Text, IPInput4.Text);
+                serverConnect4.Text = "Awaiting Connection";
+                serverConnect4.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_4.CloseServer();
+                serverConnect4.Text = "Open";
+            }
+        }
+        private void ServerConnect5_Click(object sender, EventArgs e)
+        {
+            if (serverConnect5.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_5.InitialiseServer(serverPortInput5.Text, IPInput5.Text);
+                serverConnect5.Text = "Awaiting Connection";
+                serverConnect5.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_5.CloseServer();
+                serverConnect5.Text = "Open";
+            }
+        }
+        private void ServerConnect6_Click(object sender, EventArgs e)
+        {
+            if (serverConnect6.Text == "Open")
+            {
+                //InitialiseServer();
+                peltierTCP_6.InitialiseServer(serverPortInput6.Text, IPInput6.Text);
+                serverConnect6.Text = "Awaiting Connection";
+                serverConnect6.Enabled = false;
+            }
+            else
+            {
+                //CloseServer();
+                peltierTCP_6.CloseServer();
+                serverConnect6.Text = "Open";
+            }
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            loadForm();
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            closeForm();
         }
         private void Label43_Click(object sender, EventArgs e)
         {

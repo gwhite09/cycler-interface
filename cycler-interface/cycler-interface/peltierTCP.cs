@@ -122,7 +122,7 @@ namespace cycler_interface
                         }
                     }
                     string chanNum = data.Split('<')[0];
-                    int indexNumber = Convert.ToInt32(chanNum) - 1;
+                    int indexNumber = Convert.ToInt32(chanNum);
                     //appendToServerLog("Text received:" + data);
                     //appendToServerLog("Channel #:" + chanNum);
 
@@ -141,6 +141,11 @@ namespace cycler_interface
                     {
                         Console.WriteLine("Out of range, channel #: " + chanNum);
                     }
+
+                    Console.WriteLine("Requested channel number:" + chanNum);
+                    Console.WriteLine("Index number:" + indexNumber);
+                    Console.WriteLine("Line:" + line);
+                    Console.WriteLine("Loop:" + loop);
 
                     string dataSend = chanNum + ":" + line + ":" + loop;
                     byte[] msg = Encoding.ASCII.GetBytes(dataSend);
