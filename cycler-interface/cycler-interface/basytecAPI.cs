@@ -114,7 +114,7 @@ namespace WindowsFormsApp1
             // string to get line
             string lineRequest = "?L " + channel;
             string lineString = writeToPlink(lineRequest);
-            
+
             // check for errors
             if (lineString == "E1")
             {
@@ -145,7 +145,7 @@ namespace WindowsFormsApp1
             // now check that the channel number match
             if (!(chanActual == channel))
             {
-                Console.WriteLine("Line numbers don't match:", chanActual, " ", channel);
+                Console.WriteLine("Line - Line numbers don't match:", chanActual, " ", channel);
             }
 
             // now get the line number
@@ -180,6 +180,9 @@ namespace WindowsFormsApp1
             // string to get loop
             string loopRequest = "?p " + channel + " c";
             string loopString = writeToPlink(loopRequest);
+
+            Console.WriteLine("Request: " + loopRequest);
+            Console.WriteLine("Response " + loopString);
 
             if (loopString == "E1")
             {
@@ -216,7 +219,7 @@ namespace WindowsFormsApp1
             // now check that the channel numbers match
             if (!(chanActual == channel))
             {
-                Console.WriteLine("Line numbers don't match:", chanActual, " ", channel);
+                Console.WriteLine("Loop - Line numbers don't match:", chanActual, " ", channel);
             }
 
             /*
@@ -230,28 +233,44 @@ namespace WindowsFormsApp1
 
         public string writeToPlink(string msg)
         {
+            string response = "";
             if (!cmd.HasExited) // don't do this if the process has exited
             {
                 // writes the message to plink and then reads the response
                 cmd.StandardInput.WriteLine(msg);
-                msg = cmd.StandardOutput.ReadLine();
+                Thread.Sleep(1);
+                try
+                {
+                    response = cmd.StandardOutput.ReadLine();
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Read is out of range");
+                }
 
                 // now check the message contents
-                if (msg.Length == 0)
+                if (response.Length == 0)
                 {
                     // if the message is blank - read again. This is a workaround
-                    msg = cmd.StandardOutput.ReadLine();
+                    try
+                    {
+                        response = cmd.StandardOutput.ReadLine();
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        Console.WriteLine("Read is out of range");
+                    }
                 }
-                if (msg == null)
+                if (response == null)
                 {
                     return "";
                 }
-                if (msg.Length == 0)
+                if (response.Length == 0)
                 {
                     // if the message is still blank then it must be an error
                     return "E1";    // no message recieved
                 }
-                else if (msg[0] == 'E')
+                else if (response[0] == 'E')
                 {
                     //Console.Write("Error");
                     return "E2";    // invalid command
@@ -259,7 +278,7 @@ namespace WindowsFormsApp1
                 else
                 {
                     //Console.WriteLine("Recieved: " + msg);
-                    return msg;
+                    return response;
                 }
             }
             else 

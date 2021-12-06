@@ -30,7 +30,7 @@ namespace cycler_interface
         System.Timers.Timer basyConnectionTimer;
 
         // variables
-        int basyRequestInterval =1000;
+        int basyRequestInterval =10000;
         int screenRefereshTime = 1000;            // sets the screen refresh time in ms
         int portInput;
         string serverIpAd;
@@ -239,14 +239,16 @@ namespace cycler_interface
             Console.WriteLine("Starting basy connection");
             string[] lineNum = basy.getLoop(22);
             */
-
+            Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
+            
             // cycle through each channel and request the info
-            for (int i = 0; i < 40; i++)
+            for (int j = 0; j < 40; j++)
             {
                 int actualChannel = 41;
-
+                Console.WriteLine("j = " + j);
+                
                 // first get the line number
-                string[] lineNum = basy.getLine(i);
+                string[] lineNum = basy.getLine(j);
                 try
                 {
                     actualChannel = Convert.ToInt32(lineNum[0]);
@@ -258,9 +260,9 @@ namespace cycler_interface
                 basyCurrentStats[actualChannel, 0] = lineNum[1];
 
                 actualChannel = 41; // write into the spare row if error below
-
+                
                 // then get the loop number
-                string[] loopNum = basy.getLine(i);
+                string[] loopNum = basy.getLoop(j);
                 try
                 {
                     actualChannel = Convert.ToInt32(lineNum[0]);
@@ -270,11 +272,18 @@ namespace cycler_interface
                     Console.WriteLine("Line # in wrong format:" + lineNum[0]);
                 }
                 basyCurrentStats[actualChannel, 1] = loopNum[1];
+                
             }
 
             // finally update the values in each PeltierTCP instance
             updateServerVariables();
 
+            // now report the time to the UI
+            double timeDouble = stopWatch.ElapsedMilliseconds / 1000;
+            string time = timeDouble.ToString();
+            basyReqTime.Invoke((MethodInvoker)delegate
+            { basyReqTime.Text = time; });
+            
         }
         private void ConnectToBasy()
         {
@@ -321,6 +330,8 @@ namespace cycler_interface
             // now if the basy in connected start the new inifite thread
             if (basyConnected)
             {
+                // first fire the time to initialise it then start it
+                requestFromBasy(source, e);
                 requestFromBasyTimer.Start();
             }
         }

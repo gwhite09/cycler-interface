@@ -122,6 +122,7 @@ namespace cycler_interface
                         }
                     }
                     string chanNum = data.Split('<')[0];
+                    int indexNumber = Convert.ToInt32(chanNum) - 1;
                     //appendToServerLog("Text received:" + data);
                     //appendToServerLog("Channel #:" + chanNum);
 
@@ -129,12 +130,16 @@ namespace cycler_interface
                     string loop = "0";
                     try
                     {
-                        line = basyCurStats[Convert.ToInt32(chanNum) - 1, 0];
-                        loop = basyCurStats[Convert.ToInt32(chanNum) - 1, 1];
+                        line = basyCurStats[indexNumber, 0];
+                        loop = basyCurStats[indexNumber, 1];
                     }
                     catch (NullReferenceException)
                     {
                         Console.WriteLine("Info requested from blank line");
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        Console.WriteLine("Out of range, channel #: " + chanNum);
                     }
 
                     string dataSend = chanNum + ":" + line + ":" + loop;
