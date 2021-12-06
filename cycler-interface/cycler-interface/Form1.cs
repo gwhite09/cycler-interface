@@ -66,12 +66,6 @@ namespace cycler_interface
             // create instance
             basy = new basytecAPI();
 
-            // example numbers
-            basyCurrentStats[21, 0] = "1";
-            basyCurrentStats[21, 1] = "11";
-            basyCurrentStats[22, 0] = "2";
-            basyCurrentStats[22, 1] = "12";
-
         }
         public void UpdateScreen()
         {
