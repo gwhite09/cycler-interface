@@ -419,7 +419,12 @@ namespace cycler_interface
         {
             var peltierInstances = new[]
             {
-                peltierTCP_1
+                peltierTCP_1,
+                peltierTCP_2,
+                peltierTCP_3,
+                peltierTCP_4,
+                peltierTCP_5,
+                peltierTCP_6
             };
 
             // now cycle through each instance and update them one by one
