@@ -181,8 +181,8 @@ namespace WindowsFormsApp1
             string loopRequest = "?p " + channel + " c";
             string loopString = writeToPlink(loopRequest);
 
-            Console.WriteLine("Request: " + loopRequest);
-            Console.WriteLine("Response " + loopString);
+            //Console.WriteLine("Request: " + loopRequest);
+            //Console.WriteLine("Response " + loopString);
 
             if (loopString == "E1")
             {

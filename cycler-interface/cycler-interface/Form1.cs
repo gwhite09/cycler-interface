@@ -322,7 +322,7 @@ namespace cycler_interface
             for (int j = 0; j < 40; j++)
             {
                 int actualChannel = 41;
-                Console.WriteLine("j = " + j);
+                //Console.WriteLine("j = " + j);
                 
                 // first get the line number
                 string[] lineNum = basy.getLine(j);

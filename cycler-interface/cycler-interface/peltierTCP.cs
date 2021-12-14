@@ -141,12 +141,12 @@ namespace cycler_interface
                     {
                         Console.WriteLine("Out of range, channel #: " + chanNum);
                     }
-
+                    /*
                     Console.WriteLine("Requested channel number:" + chanNum);
                     Console.WriteLine("Index number:" + indexNumber);
                     Console.WriteLine("Line:" + line);
                     Console.WriteLine("Loop:" + loop);
-
+                    */
                     string dataSend = chanNum + ":" + line + ":" + loop;
                     byte[] msg = Encoding.ASCII.GetBytes(dataSend);
                     handler.Send(msg);
