@@ -573,6 +573,12 @@ namespace cycler_interface
                 serverConnect5.Text = "Open";
             }
         }
+
+        private void BasyConnectLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void ServerConnect6_Click(object sender, EventArgs e)
         {
             if (serverConnect6.Text == "Open")

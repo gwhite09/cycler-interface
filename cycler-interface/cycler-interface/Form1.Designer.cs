@@ -29,6 +29,7 @@ namespace cycler_interface
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tcpOpen = new System.Windows.Forms.TabPage();
             this.basyConnectLabel2 = new System.Windows.Forms.Label();
@@ -294,11 +295,12 @@ namespace cycler_interface
             this.basyConnectLabel2.AutoSize = true;
             this.basyConnectLabel2.BackColor = System.Drawing.Color.Coral;
             this.basyConnectLabel2.Font = new System.Drawing.Font("Segoe UI", 8.3F);
-            this.basyConnectLabel2.Location = new System.Drawing.Point(502, 293);
+            this.basyConnectLabel2.Location = new System.Drawing.Point(511, 290);
             this.basyConnectLabel2.Name = "basyConnectLabel2";
             this.basyConnectLabel2.Size = new System.Drawing.Size(127, 23);
             this.basyConnectLabel2.TabIndex = 336;
             this.basyConnectLabel2.Text = "Not Connected";
+            this.basyConnectLabel2.Click += new System.EventHandler(this.BasyConnectLabel2_Click);
             // 
             // IPInput6
             // 
@@ -2368,8 +2370,9 @@ namespace cycler_interface
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(930, 618);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "PATserver";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);

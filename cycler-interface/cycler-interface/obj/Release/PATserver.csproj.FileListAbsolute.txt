@@ -1,0 +1,9 @@
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\bin\Release\PATserver.exe.config
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\bin\Release\PATserver.exe
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\bin\Release\PATserver.pdb
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\cycler_interface.Form1.resources
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\cycler_interface.Properties.Resources.resources
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.csproj.GenerateResource.cache
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.csproj.CoreCompileInputs.cache
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.exe
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.pdb
