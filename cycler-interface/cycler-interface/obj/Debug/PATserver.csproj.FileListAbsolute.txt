@@ -8,3 +8,13 @@ C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\o
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.csproj.CoreCompileInputs.cache
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.exe
 C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.pdb
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\PATserver.exe.config
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\PATserver.exe
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\bin\Debug\PATserver.pdb
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.csprojAssemblyReference.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler_interface.Form1.resources
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\cycler_interface.Properties.Resources.resources
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.csproj.GenerateResource.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.csproj.CoreCompileInputs.cache
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.exe
+C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Debug\PATserver.pdb

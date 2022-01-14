@@ -17,6 +17,7 @@ namespace cycler_interface
 {
     public partial class Form1 : Form
     {
+
         // initialise objects
         basytecAPI basy;
         peltierTCP 
@@ -34,6 +35,9 @@ namespace cycler_interface
         // initialise timers
         System.Timers.Timer requestFromBasyTimer;
         System.Timers.Timer basyConnectionTimer;
+        System.Timers.Timer  basyDisconnectTimer;
+        System.Timers.Timer basyReconnectTimer;
+
 
         // variables
         int basyRequestInterval =10000;
@@ -66,6 +70,20 @@ namespace cycler_interface
             basyConnectionTimer.Interval = 5000;
             basyConnectionTimer.AutoReset = false;
             basyConnectionTimer.Enabled = false;
+
+            // create a timer for disconnecting and reconnecting to the BaSyTect every 12 hours
+            basyDisconnectTimer = new System.Timers.Timer();
+            basyDisconnectTimer.Elapsed += new ElapsedEventHandler(DisconnectReconnectBasy);     // runs every second
+            basyDisconnectTimer.Interval = 6* 3600 * 1000;
+            basyDisconnectTimer.AutoReset = false;
+            basyDisconnectTimer.Enabled = false;
+
+            // create a timer for disconnecting and reconnecting to the BaSyTect every 12 hours
+            basyReconnectTimer = new System.Timers.Timer();
+            basyReconnectTimer.Elapsed += new ElapsedEventHandler(ConnectToBasy);     // runs every second
+            basyReconnectTimer.Interval = 5000;
+            basyReconnectTimer.AutoReset = false;
+            basyReconnectTimer.Enabled = false;
 
             // create instance
             basy = new basytecAPI();
@@ -362,14 +380,22 @@ namespace cycler_interface
             { basyReqTime.Text = time; });
             
         }
-        private void ConnectToBasy()
+        private void ConnectToBasy(object sender, EventArgs e)
         {
+            appendToServerLog("Connecting to Basy...");
             string ip = basyIP.Text;
             string port = basyPort.Text;
 
             // disable the connection button
-            connectBasy.Enabled = false;
-
+            if (connectBasy.InvokeRequired)
+            {
+                connectBasy.Invoke(new MethodInvoker(delegate { connectBasy.Enabled = false; }));
+            }
+            else 
+            {
+                connectBasy.Enabled = false;
+            }
+            
             if (basy.connectToBasy(ip, port))
             {
                 // start timer to check basy connection
@@ -377,16 +403,36 @@ namespace cycler_interface
             }
             else
             {
-                connectBasy.Enabled = true;     // re-enable the button
+                // re-enable the button
+                if (connectBasy.InvokeRequired)
+                {
+                    connectBasy.Invoke(new MethodInvoker(delegate { connectBasy.Enabled = true; }));
+                }
+                else
+                {
+                    connectBasy.Enabled = true;
+                }
+                     
                 basyConnected = false;
 
             }
         }
         private void DisconnectBasy()
         {
+            appendToServerLog("Disconnecting from Basy...");
             requestFromBasyTimer.Enabled = false;  // stop sending info to the basy
             basyConnected = false;      // disconnect
             basy.closeConnection();     // if already connected then disconnect
+
+            // start a timer to auto reconnect
+            basyReconnectTimer.Enabled = true;
+        }
+        private void DisconnectReconnectBasy(object sender, EventArgs e)
+        {
+            DisconnectBasy();
+
+            // start a timer to auto reconnect
+            basyReconnectTimer.Enabled = true;
         }
         private void TestBasyConnection(object source, ElapsedEventArgs e)
         {
@@ -410,6 +456,7 @@ namespace cycler_interface
                 // first fire the time to initialise it then start it
                 requestFromBasy(source, e);
                 requestFromBasyTimer.Start();
+                basyDisconnectTimer.Enabled = true;     // disconnect from Basy after a length of time
             }
         }
         /*
@@ -490,7 +537,7 @@ namespace cycler_interface
             }
             else
             {
-                ConnectToBasy();
+                ConnectToBasy(sender, e);
             }
         }
         private void Button1_Click(object sender, EventArgs e)
