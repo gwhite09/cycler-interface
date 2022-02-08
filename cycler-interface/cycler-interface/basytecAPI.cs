@@ -139,7 +139,7 @@ namespace WindowsFormsApp1
 
             // return the channel number
             string channelActual = lineString.Remove(firstSpace);   // first remove everything after the space
-            channelActual = channelActual.Remove(0, 1);
+            channelActual = channelActual.Remove(0, 1);             // remove the "C" character
             int chanActual = Convert.ToInt32(channelActual);
 
             // now check that the channel number match
@@ -149,14 +149,19 @@ namespace WindowsFormsApp1
             }
 
             // now get the line number
+            // first trim the channel number off
+            string lineActual = lineString.Remove(0, firstSpace + 1);
+            int secondSpace = lineActual.IndexOf(" ");
+            lineActual = lineActual.Remove(secondSpace);
+
             int intLine;
             try
             {
-                intLine = Convert.ToInt32(lineString.Remove(0, firstSpace + 1)) + 1; // first add correction for line number
+                intLine = Convert.ToInt32(lineActual) + 1; // first add correction for line number
             }
             catch (FormatException)
             {
-                Console.WriteLine("Line String in the wrong format:" + lineString);
+                Console.WriteLine("Line String in the wrong format:" + lineString + " Format was:" + lineActual);
                 intLine = 0;
             }
 
