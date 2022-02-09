@@ -17,3 +17,4 @@ C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-in
 C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.csproj.CoreCompileInputs.cache
 C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.exe
 C:\Users\FaradayLab\Documents\GitHub\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.pdb
+C:\Users\gw119\source\repos\cycler-interface\cycler-interface\cycler-interface\obj\Release\PATserver.csprojAssemblyReference.cache
